@@ -1,0 +1,20 @@
+commit	description	auc	bedroc	ef1	time_s
+baseline	skill/skill/25A/exh8/vina/none	0.6767	0.4428	1.71	1342
+2098b88	vinardo scoring	0.6947	0.4028	1.37	1351
+REVERTED	box 20A (vinardo)	0.6924	0.3809	1.37	1449
+REVERTED	box 18A (vinardo)	0.6940	0.3364	1.03	1394
+REVERTED	box 30A (vinardo)	0.6846	0.3699	1.02	1402
+REVERTED	exh16 (vinardo/25A)	0.6861	0.3081	0.34	1622
+REVERTED	exh32 (vinardo/25A)	0.6925	0.3635	1.02	2152
+fd1cc8f	naive library (vinardo/25A/exh8)	0.7155	0.7111	3.00	625
+REVERTED	naive receptor+library (vinardo/25A/exh8)	0.7060	0.7299	3.50	674
+ff17182	naive library + vina scoring (25A/exh8)	0.7347	0.7660	3.50	578
+REVERTED	energy_range 5 (naive/vina/25A/exh8)	0.7347	0.7663	3.50	582
+2fa780e	batch_size 50 (naive/vina/25A/exh8)	0.7325	0.7397	3.43	1381
+REVERTED	batch_size 20 (naive/vina/25A)	0.7300	0.6513	3.23	3174
+REVERTED	exh4 (naive/vina/25A/batch50)	0.7294	0.7289	3.43	1190
+REVERTED	box 22A (naive/vina/exh8/batch50)	0.7288	0.7094	3.43	1454
+REVERTED	num_modes 20 (naive/vina/25A/exh8)	0.7273	0.7265	3.71	1410
+REVERTED	rank transform (naive/vinardo)	0.7060	0.7299	3.50	0
+REVERTED	zscore transform (naive/vinardo)	0.7060	0.7299	3.50	0
+REVERTED	minmax transform (naive/vinardo)	0.7060	0.7299	3.50	0

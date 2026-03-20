@@ -1,0 +1,18 @@
+name: vs_autoresearch
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - rdkit
+  - openbabel
+  - biopython
+  - gemmi
+  - pip
+  - pip:
+    - meeko>=0.7.1
+    - chembl-webresource-client
+    - python-docx

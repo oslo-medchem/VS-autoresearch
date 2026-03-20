@@ -1,0 +1,10 @@
+commit	description	auc	bedroc	ef1	time_s
+baseline	skill/skill/25A/exh8/vina/none	0.7359	0.2765	1.93	21786
+ff7fd1b	vinardo scoring	0.7480	0.2382	1.05	22284
+REVERTED	box 20A (vinardo)	0.7447	0.2208	0.70	23272
+REVERTED	naive library (vinardo/25A)	nan	0.0000	0.00	505
+REVERTED	rank transform (vinardo/25A)	0.7443	0.2475	1.40	0
+REVERTED	exh16 (vinardo/25A)	0.7441	0.2042	0.88	24673
+REVERTED	naive receptor (vinardo/25A)	0.7320	0.2280	1.22	22319
+REVERTED	MW correction score/MW^0.33	0.7022	0.2177	1.40	22304
+REVERTED	multi-pose sweep (best/mean3/median/meanall/boltz)	0.7397	0.2114	0.88	0

@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# PDBQT libraries (regenerate from SMILES with preparation scripts)
+03_library_preparation/naive/pdbqt/
+03_library_preparation/skill/pdbqt/
+
+# Cache directory (generated at runtime)
+05_autoresearch/cache/
+cache/
+
+# Logs
+*.log
+run.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
