@@ -1,6 +1,6 @@
 # VS-autoresearch
 
-**Autonomous virtual screening optimisation by an agentic AI research loop: a two-target study**
+**Autonomous Optimisation of Structure-Based Virtual Screening Protocols Using an LLM Coding Agent**
 
 An LLM coding agent (Claude Code, Anthropic) autonomously executed 26 docking experiments across two structurally diverse targets—FPR2 (GPCR) and CDK2 (kinase)—systematically varying scoring functions, ligand and receptor preparation protocols, search exhaustiveness, box size, and post-docking transforms. On FPR2, Vinardo scoring improved AUC from 0.736 to 0.748 (+0.012). On CDK2, switching to an unfiltered ligand library improved AUC from 0.677 to 0.735 (+0.058). Optimal parameters were target-dependent: the preferred scoring function and library preparation reversed between targets.
 
@@ -108,7 +108,7 @@ python prepare.py && python experiment.py
 
 If you use this work, please cite:
 
-> Gani, O. Autonomous virtual screening optimisation by an agentic AI research loop: a two-target study. *Digital Discovery*, 2026, submitted.
+> Gani, O. Autonomous Optimisation of Structure-Based Virtual Screening Protocols Using an LLM Coding Agent. *Digital Discovery*, 2026, submitted.
 
 ## Licence
 

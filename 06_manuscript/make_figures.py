@@ -153,127 +153,96 @@ def make_figure1():
 
 
 # ============================================================================
-# FIGURE 2: AUC comparison across experiments — both targets
+# ============================================================================
+# FIGURE 2: Multi-metric divergence — baseline vs optimised
 # ============================================================================
 
 def make_figure2():
-    # --- FPR2 data ---
-    fpr2_labels = [
-        "Baseline\n(Vina)", "Vinardo\nscoring", "Box\n20 \u00c5",
-        "Naive\nlibrary", "Rank\ntransform", "Exh.\n16",
-        "Naive\nreceptor", "MW\ncorrection", "Multi-pose\nmean top-3",
-        "Multi-pose\nBoltzmann",
-    ]
-    fpr2_aucs = [0.736, 0.748, 0.745, np.nan, 0.744, 0.744, 0.732, 0.702, 0.715, 0.730]
-    fpr2_decisions = ["baseline", "kept", "reverted", "reverted", "reverted",
-                      "reverted", "reverted", "reverted", "reverted", "reverted"]
+    """Percentage change from baseline for AUC, BEDROC, and EF 1%.
 
-    # --- CDK2 data ---
-    cdk2_labels = [
-        "Baseline\n(Vina/skill)", "Vinardo\nscoring", "Box\n20 \u00c5",
-        "Box\n18 \u00c5", "Box\n30 \u00c5", "Exh.\n16",
-        "Exh.\n32", "Naive lib\n(Vinardo)", "Naive rec+\nlib", "Naive lib\n(Vina)",
-        "Energy\nrange 5", "Batch\nsize 50", "Batch\nsize 20", "Exh.\n4",
-        "Box\n22 \u00c5", "Num\nmodes 20",
-    ]
-    cdk2_aucs = [0.677, 0.695, 0.692, 0.694, 0.685, 0.686,
-                 0.693, 0.716, 0.706, 0.735,
-                 0.735, 0.733, 0.730, 0.729, 0.729, 0.727]
-    cdk2_decisions = [
-        "baseline", "kept", "reverted", "reverted", "reverted", "reverted",
-        "reverted", "kept", "reverted", "kept",
-        "reverted", "kept", "reverted", "reverted", "reverted", "reverted",
-    ]
+    Reveals that FPR2 AUC gain comes at the cost of early enrichment,
+    while CDK2 improvement is robust across all three metrics.
+    """
+    metric_labels = ["EF 1%", "BEDROC (α = 80.5)", "ROC AUC"]  # bottom to top
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(7.5, 6.5),
-                                    gridspec_kw={"hspace": 0.45})
+    # FPR2: baseline → optimised (Vinardo scoring)
+    fpr2_bl  = [1.93,   0.2765, 0.7359]
+    fpr2_opt = [1.05,   0.2382, 0.7480]
 
-    def color_for(d):
-        if d == "kept":
-            return C_KEPT
-        elif d == "baseline":
-            return C_BASELINE
-        else:
-            return C_REVERTED
+    # CDK2: baseline → optimised (naive library + Vina scoring)
+    cdk2_bl  = [1.71,   0.4428, 0.6767]
+    cdk2_opt = [3.50,   0.7660, 0.7347]
 
-    # --- Panel A: FPR2 ---
-    x1 = np.arange(len(fpr2_labels))
-    colors1 = [color_for(d) for d in fpr2_decisions]
-    bars1 = ax1.bar(x1, [a if not np.isnan(a) else 0 for a in fpr2_aucs],
-                    color=colors1, edgecolor="white", linewidth=0.5, width=0.7)
+    fpr2_pct = [(o - b) / b * 100 for b, o in zip(fpr2_bl, fpr2_opt)]
+    cdk2_pct = [(o - b) / b * 100 for b, o in zip(cdk2_bl, cdk2_opt)]
 
-    # Hatching for NaN (naive library)
-    bars1[3].set_hatch("///")
-    bars1[3].set_facecolor("#DDDDDD")
-    bars1[3].set_edgecolor(C_REVERTED)
+    # Formatting helpers
+    def fmt_abs(bl, opt, is_ef=False):
+        if is_ef:
+            return f"{bl:.2f} → {opt:.2f}"
+        return f"{bl:.3f} → {opt:.3f}"
 
-    ax1.axhline(y=0.748, color=C_KEPT, linestyle="--", linewidth=0.7, alpha=0.6)
-    ax1.text(len(fpr2_labels) - 0.5, 0.751, "Best: 0.748", fontsize=6.5,
-             color=C_KEPT, ha="right", va="bottom")
-    ax1.axhline(y=0.736, color=C_BASELINE, linestyle=":", linewidth=0.7, alpha=0.6)
-    ax1.text(len(fpr2_labels) - 0.5, 0.726, "Baseline: 0.736", fontsize=6.5,
-             color=C_BASELINE, ha="right", va="bottom")
-    ax1.axhline(y=0.5, color=C_GREY, linestyle="-", linewidth=0.5, alpha=0.3)
+    C_POS = "#2E7D32"   # dark green for improvement
+    C_NEG = C_REVERTED  # red for worsening
 
-    for i, a in enumerate(fpr2_aucs):
-        if np.isnan(a):
-            ax1.text(i, 0.52, "Failed", ha="center", va="bottom", fontsize=6,
-                     color=C_REVERTED, fontweight="bold", rotation=90)
-        else:
-            ax1.text(i, a + 0.003, f"{a:.3f}", ha="center", va="bottom",
-                     fontsize=6, fontweight="medium")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.5, 3.2), sharey=True,
+                                    gridspec_kw={"wspace": 0.15})
+    y = np.arange(len(metric_labels))
+    bar_h = 0.50
 
-    ax1.set_xticks(x1)
-    ax1.set_xticklabels(fpr2_labels, fontsize=6, rotation=30, ha="right")
-    ax1.set_ylabel("ROC AUC")
-    ax1.set_ylim(0.48, 0.79)
-    ax1.set_xlim(-0.6, len(fpr2_labels) - 0.4)
-    ax1.spines["top"].set_visible(False)
-    ax1.spines["right"].set_visible(False)
-    ax1.set_title("FPR2 (GPCR, 3.0 \u00c5 cryo-EM)", fontsize=10, fontweight="bold", loc="left")
+    # Shared x-axis range so panels are directly comparable
+    xlim = (-60, 140)
 
-    legend_patches = [
-        mpatches.Patch(facecolor=C_BASELINE, label="Baseline"),
-        mpatches.Patch(facecolor=C_KEPT, label="Kept"),
-        mpatches.Patch(facecolor=C_REVERTED, label="Reverted"),
-    ]
-    ax1.legend(handles=legend_patches, loc="upper right", framealpha=0.9,
-               edgecolor="#CCCCCC", fontsize=7)
-    ax1.text(-0.06, 1.08, "A", transform=ax1.transAxes, fontsize=13,
-             fontweight="bold", va="top")
+    for ax, pcts, bl, opt, title, panel_lbl in [
+        (ax1, fpr2_pct, fpr2_bl, fpr2_opt,
+         "FPR2 (GPCR, 3.0 \u00c5 cryo-EM)", "A"),
+        (ax2, cdk2_pct, cdk2_bl, cdk2_opt,
+         "CDK2 (kinase, 1.74 \u00c5 X-ray)", "B"),
+    ]:
+        colors = [C_POS if p > 0 else C_NEG for p in pcts]
+        ax.barh(y, pcts, height=bar_h, color=colors, edgecolor="white",
+                linewidth=0.5, alpha=0.85)
 
-    # --- Panel B: CDK2 ---
-    x2 = np.arange(len(cdk2_labels))
-    colors2 = [color_for(d) for d in cdk2_decisions]
-    bars2 = ax2.bar(x2, cdk2_aucs,
-                    color=colors2, edgecolor="white", linewidth=0.5, width=0.7)
+        # Zero line
+        ax.axvline(x=0, color="#333333", linewidth=0.6)
 
-    ax2.axhline(y=0.735, color=C_KEPT, linestyle="--", linewidth=0.7, alpha=0.6)
-    ax2.text(len(cdk2_labels) - 0.5, 0.737, "Best: 0.735", fontsize=6.5,
-             color=C_KEPT, ha="right", va="bottom")
-    ax2.axhline(y=0.677, color=C_BASELINE, linestyle=":", linewidth=0.7, alpha=0.6)
-    ax2.text(len(cdk2_labels) - 0.5, 0.667, "Baseline: 0.677", fontsize=6.5,
-             color=C_BASELINE, ha="right", va="bottom")
-    ax2.axhline(y=0.5, color=C_GREY, linestyle="-", linewidth=0.5, alpha=0.3)
+        # Annotate each bar — always place text to the right of the bar
+        for i, (p, b_val, o_val) in enumerate(zip(pcts, bl, opt)):
+            is_ef = (i == 0)  # EF 1% is index 0
+            sign = "+" if p > 0 else ""
+            color = C_POS if p > 0 else C_NEG
 
-    for i, a in enumerate(cdk2_aucs):
-        ax2.text(i, a + 0.003, f"{a:.3f}", ha="center", va="bottom",
-                 fontsize=5.5, fontweight="medium", rotation=45)
+            if p >= 0:
+                text_x = p + 3
+            else:
+                # Negative bars: place annotations right of zero to avoid
+                # colliding with y-axis labels
+                text_x = 3
 
-    ax2.set_xticks(x2)
-    ax2.set_xticklabels(cdk2_labels, fontsize=5.5, rotation=40, ha="right")
-    ax2.set_ylabel("ROC AUC")
-    ax2.set_ylim(0.48, 0.78)
-    ax2.set_xlim(-0.6, len(cdk2_labels) - 0.4)
-    ax2.spines["top"].set_visible(False)
-    ax2.spines["right"].set_visible(False)
-    ax2.set_title("CDK2 (kinase, 1.74 \u00c5 X-ray)", fontsize=10, fontweight="bold", loc="left")
+            ax.text(text_x, i + 0.12, f"{sign}{p:.1f}%",
+                    va="center", ha="left", fontsize=8, fontweight="bold",
+                    color=color)
+            ax.text(text_x, i - 0.18, fmt_abs(b_val, o_val, is_ef),
+                    va="center", ha="left", fontsize=6.5, color=C_GREY)
 
-    ax2.legend(handles=legend_patches, loc="upper right", framealpha=0.9,
-               edgecolor="#CCCCCC", fontsize=7)
-    ax2.text(-0.06, 1.08, "B", transform=ax2.transAxes, fontsize=13,
-             fontweight="bold", va="top")
+        ax.set_xlim(xlim)
+        ax.set_xlabel("Change from baseline (%)")
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.set_title(title, fontsize=9, fontweight="bold", loc="left")
+        ax.text(-0.08 if panel_lbl == "A" else -0.04, 1.10, panel_lbl,
+                transform=ax.transAxes, fontsize=13, fontweight="bold",
+                va="top")
 
+    ax1.set_yticks(y)
+    ax1.set_yticklabels(metric_labels, fontsize=9)
+
+    # Light shading to separate improving vs worsening regions
+    for ax in (ax1, ax2):
+        ax.axvspan(xlim[0], 0, color=C_NEG, alpha=0.03, zorder=0)
+        ax.axvspan(0, xlim[1], color=C_POS, alpha=0.03, zorder=0)
+
+    fig.tight_layout()
     for fmt in ("png", "svg"):
         fig.savefig(OUTDIR / f"figure2_auc_comparison.{fmt}", transparent=False,
                     facecolor="white")
@@ -281,7 +250,6 @@ def make_figure2():
     print("Figure 2 saved.")
 
 
-# ============================================================================
 # FIGURE 3: Cross-target parameter sensitivity
 # ============================================================================
 

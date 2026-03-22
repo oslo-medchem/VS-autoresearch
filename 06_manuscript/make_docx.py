@@ -184,8 +184,8 @@ def make_manuscript():
 
     # ---- Title block ----
     p_text(doc,
-           "Autonomous virtual screening optimisation by an agentic AI "
-           "research loop: a two-target study",
+           "Autonomous Optimisation of Structure-Based Virtual Screening "
+           "Protocols Using an LLM Coding Agent",
            bold=True, font_size=16,
            alignment=WD_ALIGN_PARAGRAPH.CENTER, space_after=12)
     p_text(doc, "Osman Gani", font_size=12,
@@ -210,14 +210,18 @@ def make_manuscript():
          "Anthropic) autonomously executed 26 docking experiments, systematically varying "
          "scoring functions, ligand and receptor preparation protocols, search "
          "exhaustiveness, box size, and post-docking transforms. On FPR2, the agent "
-         "identified that Vinardo scoring improves AUC from 0.736 to 0.748 (+0.012), "
-         "while on CDK2, switching to an unfiltered ligand library dramatically improved "
-         "AUC from 0.677 to 0.735 (+0.058). Strikingly, optimal parameters were "
-         "target-dependent: the preferred scoring function and library preparation "
-         "reversed between targets. These results demonstrate that the autoresearch "
-         "pattern translates effectively from machine learning to physics-based "
-         "computational chemistry and that autonomous parameter optimisation can uncover "
-         "target-specific configurations that manual tuning is unlikely to explore.",),
+         "identified that Vinardo scoring improves ROC AUC from 0.736 to 0.748 (+1.6%), "
+         "while on CDK2, switching to an unfiltered ligand library improved AUC from "
+         "0.677 to 0.735 (+8.6%). Multi-metric analysis revealed a critical distinction: "
+         "the FPR2 AUC gain came at the cost of early enrichment (BEDROC \u221213.9%, "
+         "EF 1% \u221245.6%), whereas CDK2 showed robust improvement across all metrics "
+         "(BEDROC +73.0%, EF 1% +104.7%). Optimal parameters were target-dependent, with "
+         "the preferred scoring function and library preparation reversing between "
+         "targets. These results demonstrate that the autoresearch pattern translates "
+         "effectively from machine learning to physics-based computational chemistry, "
+         "that single-metric optimisation can be misleading, and that autonomous "
+         "parameter search can uncover target-specific configurations unlikely to "
+         "emerge from manual tuning.",),
     ])
 
     # ---- Introduction ----
@@ -229,9 +233,8 @@ def make_manuscript():
         (" uses AI coding agents to run autonomous experiment loops: the agent reads "
          "its own source code, forms a hypothesis, modifies the code, runs the "
          "experiment, evaluates the outcome, and keeps or reverts the change. This "
-         "pattern has shown striking results in machine learning, where overnight "
-         "runs of dozens of experiments have yielded substantial performance gains "
-         "on language model training benchmarks.",),
+         "pattern has produced substantial improvements in machine learning, where "
+         "overnight runs have improved language model training benchmarks.",),
         ("1", False, False, True),
         (" However, the paradigm has not been applied outside machine learning, and "
          "its utility for experimental pipelines in the natural sciences remains "
@@ -241,9 +244,9 @@ def make_manuscript():
     p_mixed(doc, [
         ("Structure-based virtual screening (VS) is a natural candidate for "
          "autonomous optimisation. A typical docking campaign involves dozens of "
-         "tuneable parameters\u2014scoring function, receptor preparation method, "
+         "tuneable parameters (scoring function, receptor preparation method, "
          "box size, search exhaustiveness, ligand preparation protocol, post-docking "
-         "score normalisation\u2014whose effects on enrichment metrics are difficult "
+         "score normalisation) whose effects on enrichment metrics are difficult "
          "to predict a priori.",),
         ("2,3", False, False, True),
         (" These parameters are typically set by expert intuition or limited manual "
@@ -255,10 +258,9 @@ def make_manuscript():
     ])
 
     p_mixed(doc, [
-        ("LLM-based coding agents have matured from simple API wrappers into "
-         "autonomous systems capable of executing complex scientific workflows. "
-         "Recent work has demonstrated agents that augment chemistry reasoning "
-         "with specialised tools,",),
+        ("LLM-based coding agents can now execute multi-step scientific workflows "
+         "autonomously. Recent work has demonstrated agents that augment chemistry "
+         "reasoning with specialised tools,",),
         ("5", False, False, True),
         (" plan and carry out chemical syntheses,",),
         ("6", False, False, True),
@@ -266,8 +268,8 @@ def make_manuscript():
         ("7", False, False, True),
         (" However, these studies used agents to execute predefined workflows "
          "rather than to iteratively optimise one. The question of whether an "
-         "LLM agent can function as an autonomous researcher\u2014forming and "
-         "testing its own hypotheses in a self-directed loop\u2014has not been "
+         "LLM agent can function as an autonomous researcher, forming and "
+         "testing its own hypotheses in a self-directed loop, has not been "
          "addressed in computational chemistry.",),
     ])
 
@@ -298,9 +300,12 @@ def make_manuscript():
          "ten on FPR2 (\u223c55 GPU-hours, single GPU) and sixteen on CDK2 "
          "(\u223c6 GPU-hours, dual-GPU). Of these, one experiment was kept for "
          "FPR2 (Vinardo scoring) and three for CDK2 (naive library, Vina scoring, "
-         "batch size adjustment). The agent made all decisions\u2014hypothesis "
-         "selection, parameter modification, keep/revert\u2014without human "
-         "intervention.",),
+         "batch size adjustment). The agent followed a strict experiment loop "
+         "(Fig. 1) and made all decisions (hypothesis selection, parameter "
+         "modification, keep/revert) without human intervention. Although ROC AUC was the primary optimisation target, all "
+         "experiments were evaluated against three metrics (ROC AUC, BEDROC at "
+         "\u03b1 = 80.5, and enrichment factor at 1%), enabling post hoc analysis "
+         "of whether AUC gains translated into improved early enrichment.",),
     ])
 
     # ---- FPR2 results ----
@@ -359,7 +364,7 @@ def make_manuscript():
     doc.add_heading(
         "CDK2: library preparation has the largest impact", level=2)
     p_mixed(doc, [
-        ("The CDK2 campaign yielded a dramatically larger improvement: "
+        ("The CDK2 campaign yielded a larger improvement: "
          "AUC rose from 0.677 (baseline) to 0.735 (+0.058, +8.6%; Table 2). "
          "The largest single gain came from switching to the naive "
          "(OpenBabel-prepared) ligand library while retaining the Meeko-prepared "
@@ -441,34 +446,72 @@ def make_manuscript():
          "parameter change.",),
     ], width=Inches(5.5))
 
-    # Fig 2 - AUC comparison
+    # Fig 2 - multi-metric divergence
     add_figure(doc, "figure2_auc_comparison.png", [
         ("Fig. 2 ", True),
-        ("ROC AUC across all experiments for FPR2 (A, 10 experiments) and "
-         "CDK2 (B, 16 experiments). Green: baseline; blue: kept; red: "
-         "reverted. Dashed lines indicate best AUC achieved.",),
+        ("Multi-metric divergence between baseline and optimised "
+         "configurations. Percentage change from baseline for ROC AUC, "
+         "BEDROC (\u03b1 = 80.5), and EF 1% on FPR2 (A) and CDK2 (B), "
+         "with absolute values shown below each bar. On FPR2, the AUC "
+         "gain (+1.6%) is offset by decreased early enrichment "
+         "(BEDROC \u221213.9%, EF 1% \u221245.6%), indicating that "
+         "Vinardo scoring redistributes discrimination power away from "
+         "the top-ranked compounds. On CDK2, all three metrics improve "
+         "substantially, confirming that library expansion and scoring "
+         "function selection jointly enhanced both global ranking and "
+         "early enrichment.",),
     ], width=Inches(6.0))
 
     # ---- Cross-target comparison ----
     doc.add_heading(
         "Optimal parameters are target-dependent", level=2)
     p_mixed(doc, [
-        ("The most striking finding is the reversal of optimal parameters "
+        ("The key finding is the reversal of optimal parameters "
          "between targets (Fig. 3). For FPR2, Vinardo outperformed Vina "
          "(+0.012 AUC), while for CDK2, Vina outperformed Vinardo (+0.019) "
          "after switching to the naive library. Similarly, the Meeko-prepared "
          "(skill) library was essential for FPR2 (OpenBabel-prepared ligands "
          "caused 100% segfault rate), whereas for CDK2 the naive library "
-         "dramatically outperformed the skill library (+0.058 AUC). These "
+         "outperformed the skill library by a wide margin (+0.058 AUC). These "
          "reversals demonstrate that there is no universally optimal VS "
          "configuration: scoring function, preparation protocol, and other "
          "parameters interact with target-specific binding site characteristics "
          "in ways that are difficult to predict a priori.",),
     ])
 
+    doc.add_heading(
+        "AUC gains do not guarantee improved early enrichment", level=2)
     p_mixed(doc, [
-        ("The differing response to library preparation is particularly "
-         "informative. For FPR2, the skill library (Meeko-prepared with "
+        ("Multi-metric analysis reveals a limitation of "
+         "single-metric optimisation (Fig. 2). On FPR2, the Vinardo-driven "
+         "AUC improvement (+1.6%) was accompanied by a 13.9% decrease in "
+         "BEDROC and a 45.6% decrease in EF 1%, indicating that the scoring "
+         "function change reshuffled the ranked list without improving, "
+         "and in fact worsening, the concentration of actives among the "
+         "highest-ranked compounds. In a prospective screen where only the "
+         "top 1% of compounds can be tested experimentally, this AUC gain "
+         "would translate into fewer confirmed hits. By contrast, the CDK2 "
+         "optimisation improved all three metrics: AUC +8.6%, BEDROC +73.0%, "
+         "and EF 1% +104.7%. Concretely, the CDK2 "
+         "improvement arose from a structural change to the input library "
+         "(removing a counterproductive PAINS/Brenk filter), whereas the "
+         "FPR2 improvement relied solely on a scoring function swap that "
+         "altered the score distribution without fundamentally changing "
+         "which compounds were evaluated.",),
+    ])
+    p_mixed(doc, [
+        ("These results support multi-metric evaluation in "
+         "autonomous VS campaigns. An agent optimising BEDROC or EF 1% "
+         "instead of, or alongside, AUC might reach different and "
+         "potentially more practically useful configurations. Future "
+         "implementations should consider multi-objective optimisation "
+         "frameworks that balance global discrimination (AUC) against "
+         "early enrichment (BEDROC, EF 1%).",),
+    ])
+
+    p_mixed(doc, [
+        ("The differing response to library preparation is instructive. "
+         "For FPR2, the skill library (Meeko-prepared with "
          "PAINS",),
         ("16", False, False, True),
         ("/Brenk",),
@@ -497,21 +540,19 @@ def make_manuscript():
     # ---- Agent behaviour ----
     doc.add_heading("Agent behaviour and emergent capabilities", level=2)
     p_mixed(doc, [
-        ("Several aspects of the agent\u2019s behaviour across both campaigns "
-         "merit discussion. The agent exhibited systematic exploration, "
+        ("Across both campaigns, the agent exhibited systematic exploration, "
          "prioritising high-impact parameters (scoring function, library "
          "choice) before lower-impact ones (transforms, exhaustiveness). "
          "When the naive library run on FPR2 destroyed cached results, the "
          "agent independently devised a \u201creuse_results\u201d mechanism "
          "to skip docking and test post-processing modifications on existing "
          "output files, saving approximately 6 GPU-hours per transform test. "
-         "The agent also independently discovered that rank, z-score, and "
-         "min-max transforms are monotonic and therefore cannot affect "
+         "The agent also independently recognised that rank, z-score, and "
+         "min-max transforms are monotonic and therefore cannot change "
          "ranking-based metrics, skipping redundant experiments. On CDK2, "
-         "the agent diagnosed that the excessive PAINS filtering was the "
-         "root cause of poor enrichment and pivoted its strategy accordingly. "
-         "These behaviours were not explicitly programmed but emerged from "
-         "the agent\u2019s reasoning about experimental outcomes.",),
+         "the agent diagnosed that the PAINS filtering was the "
+         "root cause of poor enrichment and adapted its strategy accordingly. "
+         "None of these behaviours was explicitly programmed.",),
     ])
 
     # ---- Limitations ----
@@ -543,21 +584,25 @@ def make_manuscript():
          "target-dependent parameter optima that would be unlikely to emerge "
          "from conventional single-configuration protocols, including the "
          "reversal of scoring function preference and the detrimental effect "
-         "of PAINS filtering on the CDK2 DUD-E benchmark.",),
+         "of PAINS filtering on the CDK2 DUD-E benchmark. Multi-metric "
+         "evaluation revealed that AUC gains do not necessarily translate "
+         "into improved early enrichment: on FPR2, BEDROC and EF 1% "
+         "actually worsened despite improved AUC, highlighting the "
+         "importance of tracking multiple metrics in autonomous VS "
+         "campaigns.",),
     ])
     p_mixed(doc, [
-        ("These results position agentic AI as a practical tool for "
-         "computational drug discovery. The autonomous agent required no "
-         "human intervention during the optimisation loops and demonstrated "
-         "emergent capabilities including infrastructure improvisation, "
-         "mathematical reasoning about score transforms, and adaptive "
-         "strategy modification. Combined with advances in self-driving "
+        ("The autonomous agent required no "
+         "human intervention during the optimisation loops and independently "
+         "devised infrastructure workarounds, reasoned about mathematical "
+         "properties of score transforms, and adapted its strategy based on "
+         "accumulated results. Combined with advances in self-driving "
          "laboratories",),
         ("6", False, False, True),
         (" and automated scientific discovery,",),
         ("7", False, False, True),
-        (" this work points toward a future where AI agents serve not merely "
-         "as tools but as autonomous research partners in drug discovery.",),
+        (" this work suggests that agentic AI can serve as a practical tool "
+         "for computational drug discovery.",),
     ])
 
     # ---- Methods ----
@@ -790,8 +835,8 @@ def make_supplementary():
            bold=True, font_size=16,
            alignment=WD_ALIGN_PARAGRAPH.CENTER, space_after=6)
     p_text(doc,
-           "Autonomous virtual screening optimisation by an agentic AI "
-           "research loop: a two-target study",
+           "Autonomous Optimisation of Structure-Based Virtual Screening "
+           "Protocols Using an LLM Coding Agent",
            bold=True, font_size=13,
            alignment=WD_ALIGN_PARAGRAPH.CENTER, space_after=8)
     p_text(doc, "Osman Gani", font_size=12,
@@ -994,7 +1039,7 @@ def make_supplementary():
         ("Experiment 9: Naive library with Vina scoring (KEPT)",
          "Hypothesis: Vina may outperform Vinardo with the naive library.",
          "Results: AUC = 0.735 (+0.019). Vina outperforms Vinardo when "
-         "using naive library\u2014opposite of FPR2 finding. "
+         "using naive library, opposite of FPR2 finding. "
          "Decision: KEPT."),
         ("Experiment 10: Energy range 5 kcal/mol",
          "Tested wider energy range.",

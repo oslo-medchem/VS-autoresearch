@@ -1,6 +1,6 @@
 # Electronic Supplementary Information (ESI)
 
-## Autonomous virtual screening optimisation by an agentic AI research loop: a two-target study
+## Autonomous Optimisation of Structure-Based Virtual Screening Protocols Using an LLM Coding Agent
 
 Osman Gani
 
