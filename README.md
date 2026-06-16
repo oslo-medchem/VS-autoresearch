@@ -108,7 +108,7 @@ python prepare.py && python experiment.py
 
 If you use this work, please cite:
 
-> Gani, O. Autonomous Optimisation of Structure-Based Virtual Screening Protocols Using an LLM Coding Agent. *Digital Discovery*, 2026, submitted.
+> Gani, O. Autonomous Optimisation of Structure-Based Virtual Screening Protocols Using an LLM Coding Agent. 2026, submitted.
 
 ## Licence
 

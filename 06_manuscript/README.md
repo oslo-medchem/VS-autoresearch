@@ -1,6 +1,6 @@
 # Stage 6: Manuscript Materials
 
-Publication materials for the Digital Discovery Communication.
+Publication materials for the Communication.
 
 ## Files
 
