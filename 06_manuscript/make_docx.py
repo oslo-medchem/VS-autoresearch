@@ -373,10 +373,14 @@ def make_manuscript():
          "PAINS/Brenk filter",),
         ("16,17", False, False, True),
         (" removed 47% of compounds from the skill library, reducing it from "
-         "2,471 to 1,309 ligands. The removed compounds included known CDK2 "
-         "actives from DUD-E,",),
+         "2,471 to 1,309 ligands. A formal active-versus-decoy count shows the "
+         "filter dropped proportionally fewer actives (37.8%, 179/474) than "
+         "decoys (49.3%, 984/1,997), so it enriched the retained set in actives "
+         "(Fisher exact odds ratio 0.63, p = 6.5 × 10⁻⁶). The higher "
+         "AUC of the unfiltered library therefore reflects a change in the DUD-E",),
         ("19", False, False, True),
-        (" biasing the benchmark against the filtered library.",),
+        (" benchmark composition, and a larger decoy pool, rather than a genuine "
+         "docking-protocol improvement.",),
     ])
 
     p_mixed(doc, [
@@ -491,13 +495,14 @@ def make_manuscript():
          "highest-ranked compounds. In a prospective screen where only the "
          "top 1% of compounds can be tested experimentally, this AUC gain "
          "would translate into fewer confirmed hits. By contrast, the CDK2 "
-         "optimisation improved all three metrics: AUC +8.6%, BEDROC +73.0%, "
-         "and EF 1% +104.7%. Concretely, the CDK2 "
-         "improvement arose from a structural change to the input library "
-         "(removing a counterproductive PAINS/Brenk filter), whereas the "
-         "FPR2 improvement relied solely on a scoring function swap that "
-         "altered the score distribution without fundamentally changing "
-         "which compounds were evaluated.",),
+         "change raised all three metrics (AUC +8.6%, BEDROC +73.0%, "
+         "and EF 1% +104.7%), but this apparent gain arose from a change in "
+         "benchmark composition rather than a better docking protocol: an "
+         "inappropriate PAINS/Brenk filter had been applied to a DUD-E set, "
+         "and switching to the unfiltered library restored the original "
+         "property-matched composition. The FPR2 change relied solely on a "
+         "scoring function swap that altered the score distribution without "
+         "fundamentally changing which compounds were evaluated.",),
     ])
     p_mixed(doc, [
         ("These results support multi-metric evaluation in "
@@ -519,12 +524,12 @@ def make_manuscript():
         (" filtering) was the only viable option because OpenBabel-generated "
          "PDBQT files contained pervasive structural defects that crashed "
          "Uni-Dock. For CDK2, the same PAINS/Brenk filter removed 47% of "
-         "compounds, including bona fide DUD-E actives, resulting in a "
-         "substantially smaller library (1,309 vs. 2,471 compounds) and "
-         "worse enrichment. This finding cautions against blanket application "
-         "of PAINS filters in retrospective benchmarks where the active set "
-         "may contain compounds flagged by these heuristic substructure "
-         "rules.",),
+         "compounds (1,309 vs. 2,471), and because it dropped proportionally "
+         "more decoys than actives it altered the deliberately property-matched "
+         "DUD-E composition; the unfiltered library's higher enrichment "
+         "reflects that composition change rather than a better protocol. This "
+         "cautions against applying PAINS/Brenk filters to retrospective "
+         "benchmarks whose active/decoy balance is matched by design.",),
     ])
 
     # Fig 3 - cross-target
