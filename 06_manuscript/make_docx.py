@@ -297,7 +297,7 @@ def make_manuscript():
     doc.add_heading("Overview of both autonomous campaigns", level=2)
     p_mixed(doc, [
         ("The agent completed 26 experiments across two targets (Tables 1 and 2): "
-         "ten on FPR2 (\u223c55 GPU-hours, single GPU) and sixteen on CDK2 "
+         "ten on FPR2 (\u223c38 GPU-hours, single GPU) and sixteen on CDK2 "
          "(\u223c6 GPU-hours, dual-GPU). Of these, one experiment was kept for "
          "FPR2 (Vinardo scoring) and three for CDK2 (naive library, Vina scoring, "
          "batch size adjustment). The agent followed a strict experiment loop "

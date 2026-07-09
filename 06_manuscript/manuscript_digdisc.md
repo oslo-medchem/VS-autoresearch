@@ -26,7 +26,7 @@ I applied the autoresearch paradigm to VS optimisation on two structurally diver
 
 ### Overview of both autonomous campaigns
 
-The agent completed 26 experiments across two targets (Tables 1 and 2): ten on FPR2 (~55 GPU-hours, single GPU) and sixteen on CDK2 (~6 GPU-hours, dual-GPU). Of these, one experiment was kept for FPR2 (Vinardo scoring) and three for CDK2 (naive library, Vina scoring, batch size adjustment). The agent followed a strict experiment loop (Fig. 1) and made all decisions (hypothesis selection, parameter modification, keep/revert) without human intervention. Although ROC AUC was the primary optimisation target, all experiments were evaluated against three metrics (ROC AUC, BEDROC at α = 80.5, and enrichment factor at 1%), enabling post hoc analysis of whether AUC gains translated into improved early enrichment.
+The agent completed 26 experiments across two targets (Tables 1 and 2): ten on FPR2 (~38 GPU-hours, single GPU) and sixteen on CDK2 (~6 GPU-hours, dual-GPU). Of these, one experiment was kept for FPR2 (Vinardo scoring) and three for CDK2 (naive library, Vina scoring, batch size adjustment). The agent followed a strict experiment loop (Fig. 1) and made all decisions (hypothesis selection, parameter modification, keep/revert) without human intervention. Although ROC AUC was the primary optimisation target, all experiments were evaluated against three metrics (ROC AUC, BEDROC at α = 80.5, and enrichment factor at 1%), enabling post hoc analysis of whether AUC gains translated into improved early enrichment.
 
 ### FPR2: scoring function is the dominant parameter
 
