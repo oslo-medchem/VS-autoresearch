@@ -6,7 +6,7 @@ An LLM coding agent (Claude Code, Anthropic) autonomously executed 26 docking ex
 
 ## Results Summary
 
-### FPR2 (GPCR, PDB 7T6S, 3.0 Å cryo-EM) — 10 experiments, ~55 GPU-hours
+### FPR2 (GPCR, PDB 7T6S, 3.0 Å cryo-EM) — 10 experiments, ~38 GPU-hours
 
 | # | Experiment | AUC | Delta AUC | Decision |
 |---|-----------|-----|----------|----------|
@@ -102,7 +102,7 @@ python prepare.py && python experiment.py
 - **Docking engine**: Uni-Dock (GPU-accelerated AutoDock Vina)
 - **GPU**: NVIDIA RTX 4500 Ada (24 GB VRAM), single (FPR2) or dual (CDK2)
 - **Agent**: Claude Code (Anthropic, claude-opus-4-6)
-- **Total compute**: ~61 GPU-hours across 26 experiments
+- **Total compute**: ~44 GPU-hours across 26 experiments
 
 ## Citation
 
